@@ -1,134 +1,119 @@
-# insertion methods 
-
-# A linked list node 
-class Node: 
-
-	# Constructor to create a new node 
-	def __init__(self, data): 
-		self.data = data 
-		self.next = None
-		self.prev = None
-
-# Class to create a Doubly Linked List 
-class DoublyLinkedList: 
-
-	# Constructor for empty Doubly Linked List 
-	def __init__(self): 
-		self.head = None
-
-	# Given a reference to the head of a list and an 
-	# integer, inserts a new node on the front of list 
-	def push(self, new_data): 
-
-		# 1. Allocates node 
-		# 2. Put the data in it 
-		new_node = Node(new_data) 
-
-		# 3. Make next of new node as head and 
-		# previous as None (already None) 
-		new_node.next = self.head 
-
-		# 4. change prev of head node to new_node 
-		if self.head is not None: 
-			self.head.prev = new_node 
-
-		# 5. move the head to point to the new node 
-		self.head = new_node 
-
-	# Given a node as prev_node, insert a new node after 
-	# the given node 
-	def insertAfter(self, prev_node, new_data): 
-
-		# 1. Check if the given prev_node is None 
-		if prev_node is None: 
-			print ("the given previous node cannot be NULL")
-			return
-
-		# 2. allocate new node 
-		# 3. put in the data 
-		new_node = Node(new_data) 
-
-		# 4. Make net of new node as next of prev node 
-		new_node.next = prev_node.next
-
-		# 5. Make prev_node as previous of new_node 
-		prev_node.next = new_node 
-
-		# 6. Make prev_node ass previous of new_node 
-		new_node.prev = prev_node 
-
-		# 7. Change previous of new_nodes's next node 
-		if new_node.next is not None: 
-			new_node.next.prev = new_node 
-
-	# Given a reference to the head of DLL and integer, 
-	# appends a new node at the end 
-	def append(self, new_data): 
-
-		# 1. Allocates node 
-		# 2. Put in the data 
-		new_node = Node(new_data) 
-
-		# 3. This new node is going to be the last node, 
-		# so make next of it as None 
-		new_node.next = None
-
-		# 4. If the Linked List is empty, then make the 
-		# new node as head 
-		if self.head is None: 
-			new_node.prev = None
-			self.head = new_node 
-			return
-
-		# 5. Else traverse till the last node 
-		last = self.head 
-		while(last.next is not None): 
-			last = last.next
-
-		# 6. Change the next of last node 
-		last.next = new_node 
-
-		# 7. Make last node as previous of new node 
-		new_node.prev = last 
-
-		return
-
-	# This function prints contents of linked list 
-	# starting from the given node 
-	def printList(self, node): 
-
-		print ("\nTraversal in forward direction")
-		while(node is not None): 
-			print (" % d" %(node.data), )
-			last = node 
-			node = node.next
-
-		print ("\nTraversal in reverse direction")
-		while(last is not None): 
-			print (" % d" %(last.data),)
-			last = last.prev 
-
-# Start with empty list 
-llist = DoublyLinkedList() 
-
-# Insert 6. So the list becomes 6->None 
-llist.append(6) 
-
-# Insert 7 at the beginning. 
-# So linked list becomes 7->6->None 
-llist.push(7) 
-
-# Insert 1 at the beginning. 
-# So linked list becomes 1->7->6->None 
-llist.push(1) 
-
-# Insert 4 at the end. 
-# So linked list becomes 1->7->6->4->None 
-llist.append(4) 
-
-# Insert 8, after 7. 
-# So linked list becomes 1->7->8->6->4->None 
-llist.insertAfter(llist.head.next, 8) 
-
-print ("Created DLL is: ", )
-llist.printList(llist.head)
+class Node:
+    def __init__(self, data):
+       self.data = data
+       self.next = None
+       self.prev = None
+ 
+ 
+class DoublyLinkedList:
+    def __init__(self):
+        self.first = None
+        self.last = None
+ 
+    def get_node(self, index):
+        current = self.first
+        for i in range(index):
+            if current is None:
+                return None
+            current = current.next
+        return current
+ 
+    def insert_after(self, ref_node, new_node):
+        new_node.prev = ref_node
+        if ref_node.next is None:
+            self.last = new_node
+        else:
+            new_node.next = ref_node.next
+            new_node.next.prev = new_node
+        ref_node.next = new_node
+ 
+    def insert_before(self, ref_node, new_node):
+        new_node.next = ref_node
+        if ref_node.prev is None:
+            self.first = new_node
+        else:
+            new_node.prev = ref_node.prev
+            new_node.prev.next = new_node
+        ref_node.prev = new_node
+ 
+    def insert_at_beg(self, new_node):
+        if self.first is None:
+            self.first = new_node
+            self.last = new_node
+        else:
+            self.insert_before(self.first, new_node)
+ 
+    def insert_at_end(self, new_node):
+        if self.last is None:
+            self.last = new_node
+            self.first = new_node
+        else:
+            self.insert_after(self.last, new_node)
+ 
+    def remove(self, node):
+        if node.prev is None:
+            self.first = node.next
+        else:
+            node.prev.next = node.next
+ 
+        if node.next is None:
+            self.last = node.prev
+        else:
+            node.next.prev = node.prev
+ 
+    def display(self):
+        current = self.first
+        while current:
+            print(current.data, end = ' ')
+            current = current.next
+ 
+ 
+a_dllist = DoublyLinkedList()
+ 
+print('Menu')
+print('insert <data> after <index>')
+print('insert <data> before <index>')
+print('insert <data> at beg')
+print('insert <data> at end')
+print('remove <index>') 
+print('quit')
+ 
+while True:
+    print('The list: ', end = '')
+    a_dllist.display()
+    print()
+    do = input('What would you like to do? ').split()
+ 
+    operation = do[0].strip().lower()
+ 
+    if operation == 'insert':
+        data = int(do[1])
+        position = do[3].strip().lower()
+        new_node = Node(data)
+        suboperation = do[2].strip().lower() 
+        if suboperation == 'at':
+            if position == 'beg':
+                a_dllist.insert_at_beg(new_node)
+            elif position == 'end':
+                a_dllist.insert_at_end(new_node)
+        else:
+            index = int(position)
+            ref_node = a_dllist.get_node(index)
+            if ref_node is None:
+                print('No such index.')
+                continue
+            if suboperation == 'after':
+                a_dllist.insert_after(ref_node, new_node)
+            elif suboperation == 'before':
+                a_dllist.insert_before(ref_node, new_node)
+ 
+    elif operation == 'remove':
+        index = int(do[1])
+        node = a_dllist.get_node(index)
+        if node is None:
+            print('No such index.')
+            continue
+        a_dllist.remove(node)
+ 
+    elif operation == 'quit':
+        break
